@@ -36,7 +36,11 @@ function Login() {
       Cookies.set("authToken", token);
       reset();
     } catch (error) {
-      console.log("Error at loginApi");
+      console.error(
+        "Error at loginApi:",
+        error.response || error.message || error
+      );
+      alert("Failed to log in. Please try again.");
     }
   }
 
