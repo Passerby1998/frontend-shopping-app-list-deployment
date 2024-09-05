@@ -21,14 +21,14 @@ function Login() {
         data
       );
 
-      if (!res.ok) {
-        const serverError = await res.json();
-        const message = serverError.message;
+      // Handle response directly
+      if (res.status !== 200) {
+        const message = res.data.message || "An error occurred";
         alert(message);
         throw new Error(message);
       }
-      const resData = await res.json();
-      const token = resData.token;
+
+      const token = res.data.token;
       console.log(token);
       alert("User logged in successfully");
       navigate("/dashboard");
@@ -38,7 +38,7 @@ function Login() {
     } catch (error) {
       console.error(
         "Error at loginApi:",
-        error.response || error.message || error
+        error.response ? error.response.data : error.message
       );
       alert("Failed to log in. Please try again.");
     }
