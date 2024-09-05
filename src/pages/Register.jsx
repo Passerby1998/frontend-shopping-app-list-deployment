@@ -29,23 +29,22 @@ function Register() {
         data
       );
 
-      if (!res.ok) {
-        const serverError = await res.json();
-        console.error("Server Error:", serverError);
-        const errors = serverError.errors;
-        errors.forEach((error) => {
-          alert(error.message);
-        });
-        throw new Error(serverError);
-      }
+      console.log("Response Data:", res.data); // No need for .json()
 
-      const resData = await res.json();
-      console.log("Response Data:", resData);
       alert("User registered successfully");
       reset();
     } catch (error) {
-      console.error("Error at registerApi:", error);
-      alert("Registration failed. Please try again.");
+      console.error(
+        "Error at registerApi:",
+        error.response?.data || error.message
+      );
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach((error) => {
+          alert(error.message);
+        });
+      } else {
+        alert("Registration failed. Please try again.");
+      }
     }
   }
 
