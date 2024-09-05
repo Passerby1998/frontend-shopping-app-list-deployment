@@ -1,0 +1,71 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: monospace;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+button.primary {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: none;
+}
+
+button.primary-black {
+  background-color: #152238;
+  color: #ffffff;
+  border: none;
+}
+
+button.outline {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+label {
+  font-size: 1.2rem;
+  font-weight: semibold;
+}
+
+input {
+  all: unset;
+  padding: 1rem 0.6rem;
+  border-radius: 0.25rem;
+  font-size: 1.2rem;
+  border: 1px solid #000000;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 0.6rem;
+  border: 1px solid #000000;
+}
+
+table th {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+table td {
+  background-color: #ffffff;
+  color: #000000;
+}
