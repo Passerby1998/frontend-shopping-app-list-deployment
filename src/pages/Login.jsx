@@ -31,7 +31,9 @@ function Login() {
       const token = resData.token;
       console.log(token);
       alert("User logged in successfully");
-      navigate("/dashboard");
+      navigate(
+        "https://backend-shopping-list-app-deployment.onrender.com/dashboard"
+      );
 
       Cookies.set("authToken", token);
       reset();
