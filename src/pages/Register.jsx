@@ -29,6 +29,7 @@ function Register() {
         data
       );
 
+      // Handle response directly
       console.log("Response Data:", res.data); // No need for .json()
 
       alert("User registered successfully");
