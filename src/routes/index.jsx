@@ -21,10 +21,7 @@ function AppRoutes() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
-        <Route
-          path="https://backend-shopping-list-app-deployment.onrender.com/dashboard"
-          element={<PrivateRoutes />}
-        >
+        <Route path="/dashboard" element={<PrivateRoutes />}>
           <Route index element={<Dashboard />} />
         </Route>
         <Route path="*" element={<h1>Not Found</h1>} />

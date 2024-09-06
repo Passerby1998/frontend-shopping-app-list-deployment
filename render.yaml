@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: my-static-site
+    env: static
+    buildCommand: npm run build
+    publishDir: /path-to-your-build-output
+    routes:
+      - src: /dashboard
+        dest: /path-to-dashboard
+      - src: /*
+        dest: /index.html
