@@ -21,6 +21,8 @@ function Login() {
         data
       );
 
+      console.log("Full Response:", res); // Log the full response for debugging
+
       // Handle response directly
       if (res.status !== 200) {
         const message = res.data.message || "An error occurred";
@@ -29,7 +31,7 @@ function Login() {
       }
 
       const token = res.data.token;
-      console.log(token);
+      console.log("Token:", token);
       alert("User logged in successfully");
       navigate("/dashboard");
 
