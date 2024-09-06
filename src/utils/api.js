@@ -16,15 +16,17 @@ export function getApi(url) {
 
 // PROTECTED API
 
-export function getApiWithToken(url, token) {
-  if (!token) {
-    return Promise.reject(new Error("No token provided"));
-  }
-  return fetch(url, {
+export async function getApiWithToken(url, token) {
+  const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  // Check if the response is ok and in the correct format
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json(); // Ensure it returns JSON if expected
 }
 
 export function postApiWithToken(url, data, token) {
