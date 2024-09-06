@@ -22,12 +22,16 @@ function ItemDetailsForm({ onSuccess }) {
       const token = Cookies.get("authToken");
 
       // Use Axios directly for the request
-      const serverRes = await axios.post("http://localhost:3000/items", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const serverRes = await axios.post(
+        "https://backend-shopping-list-app-deployment.onrender.com/items",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       // Axios automatically parses JSON, no need to check `serverRes.ok`
       const resData = serverRes.data;

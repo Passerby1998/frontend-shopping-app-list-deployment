@@ -25,7 +25,10 @@ function Register() {
 
     try {
       // Use axios to send the POST request
-      const res = await axios.post("http://localhost:3000/register", data);
+      const res = await axios.post(
+        "https://backend-shopping-list-app-deployment.onrender.com/register",
+        data
+      );
 
       if (res.status >= 200 && res.status < 300) {
         // Successful response

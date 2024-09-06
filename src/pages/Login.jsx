@@ -16,7 +16,10 @@ function Login() {
 
   async function loginApi(data) {
     try {
-      const res = await axios.post("http://localhost:3000/login", data);
+      const res = await axios.post(
+        "https://backend-shopping-list-app-deployment.onrender.com/login",
+        data
+      );
 
       if (res.status !== 200) {
         const message = res.data.message;
