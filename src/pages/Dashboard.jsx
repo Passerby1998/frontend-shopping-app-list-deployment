@@ -28,7 +28,7 @@ function Dashboard() {
       setIsLoading(true);
       const token = Cookies.get("authToken");
 
-      // Fetch budgets
+      // Fetch budgets #called but not fetchable
       const budgetRes = await getApiWithToken(
         "https://backend-shopping-list-app-deployment.onrender.com/grocerytrip",
         token
@@ -80,6 +80,7 @@ function Dashboard() {
       );
 
       if (totalPrice > (budget.amount || 500)) {
+        //amount budget fixed to 500
         setAlertMessage("The total price of items exceeds the budget!");
       } else {
         setAlertMessage(""); // Clear the alert if the price is within the budget

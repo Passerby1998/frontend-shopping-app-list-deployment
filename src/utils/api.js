@@ -16,48 +16,58 @@ export function getApi(url) {
 
 // PROTECTED API
 
-export function getApiWithToken(url, token) {
-  if (!token) {
-    return Promise.reject(new Error("No token provided"));
+export const getApiWithToken = async (url, token) => {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
   }
-  return axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+};
 
-export function postApiWithToken(url, data, token) {
-  if (!token) {
-    return Promise.reject(new Error("No token provided"));
+export const postApiWithToken = async (url, data, token) => {
+  try {
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error posting data:", error);
+    throw error; // Re-throw error to handle it in the calling function
   }
-  return axios.post(url, data, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+};
 
-export function deleteApiWithToken(url, token) {
-  if (!token) {
-    return Promise.reject(new Error("No token provided"));
+export const deleteApiWithToken = async (url, token) => {
+  try {
+    const response = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting data:", error);
+    throw error;
   }
-  return axios.delete(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+};
 
-export function putApiWithToken(url, data, token) {
-  if (!token) {
-    return Promise.reject(new Error("No token provided"));
+export const putApiWithToken = async (url, data, token) => {
+  try {
+    const response = await axios.put(url, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error updating data:", error);
+    throw error;
   }
-  return axios.put(url, data, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+};
