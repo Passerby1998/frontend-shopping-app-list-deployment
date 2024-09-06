@@ -88,7 +88,8 @@ function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (response.ok) {
+      // Check if the status code is in the success range (2xx)
+      if (response.status >= 200 && response.status < 300) {
         alert("Item deleted successfully.");
         fetchItemsAndBudgets(); // Refresh the list
       } else {
@@ -103,16 +104,44 @@ function Dashboard() {
   async function saveItemEdits(itemId) {
     const token = Cookies.get("authToken");
     try {
-      await axios.put(
+      const response = await axios.put(
         `https://backend-shopping-list-app-deployment.onrender.com/items/${itemId}`,
         editedItem,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      alert("Item updated successfully.");
-      setEditMode(null);
-      fetchItemsAndBudgets(); // Refresh the list
+      // Check if the status code is in the success range (2xx)
+      if (response.status >= 200 && response.status < 300) {
+        alert("Item updated successfully.");
+        setEditMode(null);
+        fetchItemsAndBudgets(); // Refresh the list
+      } else {
+        alert("Failed to update item. You are not authorized.");
+      }
+    } catch (error) {
+      console.error("Error updating item", error);
+      alert("Failed to update item.");
+    }
+  }
+
+  async function saveItemEdits(itemId) {
+    const token = Cookies.get("authToken");
+    try {
+      const response = await axios.put(
+        `https://backend-shopping-list-app-deployment.onrender.com/items/${itemId}`,
+        editedItem,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.ok) {
+        alert("Item updated successfully.");
+        setEditMode(null);
+        fetchItemsAndBudgets(); // Refresh the list
+      } else {
+        alert("Failed to update item. You are not authorized.");
+      }
     } catch (error) {
       console.error("Error updating item", error);
       alert("Failed to update item.");
