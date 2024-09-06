@@ -21,28 +21,22 @@ function Login() {
         data
       );
 
-      console.log("Full Response:", res); // Log the full response for debugging
-
-      // Handle response directly
-      if (res.status !== 200) {
-        const message = res.data.message || "An error occurred";
+      if (!res.ok) {
+        const serverError = await res.json();
+        const message = serverError.message;
         alert(message);
         throw new Error(message);
       }
-
-      const token = res.data.token;
-      console.log("Token:", token);
+      const resData = await res.json();
+      const token = resData.token;
+      console.log(token);
       alert("User logged in successfully");
       navigate("/dashboard");
 
       Cookies.set("authToken", token);
       reset();
     } catch (error) {
-      console.error(
-        "Error at loginApi:",
-        error.response ? error.response.data : error.message
-      );
-      alert("Failed to log in. Please try again.");
+      console.log("Error at loginApi");
     }
   }
 
