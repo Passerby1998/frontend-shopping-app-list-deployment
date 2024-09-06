@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import axios from "axios";
 import Cookies from "js-cookie";
-import { postApiWithToken } from "../utils/api";
 
 function ItemDetailsForm({ onSuccess }) {
   const { register, handleSubmit, reset } = useForm();
@@ -20,23 +20,33 @@ function ItemDetailsForm({ onSuccess }) {
     try {
       setLoading(true);
       const token = Cookies.get("authToken");
-      const serverRes = await postApiWithToken(
-        "https://backend-shopping-list-app-deployment.onrender.com/items",
-        data,
-        token
-      );
-      if (!serverRes.ok) {
-        alert("You are not authorized to create a new item");
-        return;
-      }
-      const resData = await serverRes.json();
+
+      // Use Axios directly for the request
+      const serverRes = await axios.post("http://localhost:3000/items", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Axios automatically parses JSON, no need to check `serverRes.ok`
+      const resData = serverRes.data;
       console.log(resData);
+
       alert(`New item created: ${resData.data.name}`);
       onSuccess();
       reset();
     } catch (error) {
       console.error(error);
-      alert("Error creating new item");
+
+      // Handle Axios error response
+      if (error.response) {
+        const errorMessage =
+          error.response.data.message || "Error creating new item";
+        alert(errorMessage);
+      } else {
+        alert("Error creating new item");
+      }
     } finally {
       setLoading(false);
     }

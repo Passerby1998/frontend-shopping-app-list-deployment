@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  deleteApiWithToken,
-  getApiWithToken,
-  putApiWithToken,
-} from "../utils/api";
+import axios from "axios";
 import Cookies from "js-cookie";
 import Header from "../components/Header";
 import BudgetForm from "../components/BudgetForm";
@@ -12,7 +8,7 @@ import ItemDetailsForm from "../components/ItemDetailsForm";
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [budget, setBudget] = useState(null);
-  const [budgetList, setBudgetList] = useState([]); // Initialize as empty array
+  const [budgetList, setBudgetList] = useState([]);
   const [items, setItems] = useState([]);
   const [editMode, setEditMode] = useState(null);
   const [editedItem, setEditedItem] = useState({});
@@ -28,40 +24,31 @@ function Dashboard() {
       setIsLoading(true);
       const token = Cookies.get("authToken");
 
-      // Fetch budgets #called but not fetchable
-      const budgetRes = await getApiWithToken(
-        "https://backend-shopping-list-app-deployment.onrender.com/grocerytrip",
-        token
-      );
-      if (budgetRes.ok) {
-        const budgetData = await budgetRes.json();
-        console.log("Fetched budget data:", budgetData); // Debugging line
+      // Fetch budgets using Axios
+      const budgetRes = await axios.get("http://localhost:3000/grocerytrip", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        // Ensure the data is in the expected format
-        if (Array.isArray(budgetData.data)) {
-          setBudgetList(budgetData.data); // Assume data is directly an array
-          setBudget(budgetData.data[0] || null); // Use the first element of the array if available
-        } else {
-          console.error("Unexpected data structure:", budgetData);
-        }
+      const budgetData = budgetRes.data;
+      console.log("Fetched budget data:", budgetData);
+
+      if (Array.isArray(budgetData.data)) {
+        setBudgetList(budgetData.data);
+        setBudget(budgetData.data[0] || null);
       } else {
-        alert("You are not authorized to view the budget");
+        console.error("Unexpected data structure for budgets:", budgetData);
       }
 
-      // Fetch items
-      const itemsRes = await getApiWithToken(
-        "https://backend-shopping-list-app-deployment.onrender.com/items",
-        token
-      );
-      if (itemsRes.ok) {
-        const itemsData = await itemsRes.json();
-        console.log("Fetched items data:", itemsData); // Debugging line
-        setItems(itemsData.data || []); // Ensure itemsData.data is always an array
-      } else {
-        alert("You are not authorized to view the items");
-      }
+      // Fetch items using Axios
+      const itemsRes = await axios.get("http://localhost:3000/items", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const itemsData = itemsRes.data;
+      console.log("Fetched items data:", itemsData);
+      setItems(itemsData.data || []);
     } catch (error) {
       console.error("Error fetching data", error);
+      alert("Failed to fetch data.");
     } finally {
       setIsLoading(false);
     }
@@ -72,7 +59,6 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    // Calculate total price and check if it exceeds the budget
     if (budget && items.length > 0) {
       const totalPrice = items.reduce(
         (acc, item) => acc + (item.quantity * item.price_each || 0),
@@ -80,10 +66,9 @@ function Dashboard() {
       );
 
       if (totalPrice > (budget.amount || 500)) {
-        //amount budget fixed to 500
         setAlertMessage("The total price of items exceeds the budget!");
       } else {
-        setAlertMessage(""); // Clear the alert if the price is within the budget
+        setAlertMessage("");
       }
     }
   }, [budget, items]);
@@ -91,38 +76,36 @@ function Dashboard() {
   async function deleteItem(itemId) {
     const token = Cookies.get("authToken");
     try {
-      const response = await deleteApiWithToken(
-        `https://backend-shopping-list-app-deployment.onrender.com/items/${itemId}`,
-        token
+      const response = await axios.delete(
+        `http://localhost:3000/items/${itemId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      if (response.ok) {
-        alert("Item deleted successfully.");
-        fetchItemsAndBudgets(); // Refresh the list
-      } else {
-        alert("Failed to delete item. You are not authorized.");
-      }
+      alert("Item deleted successfully.");
+      fetchItemsAndBudgets(); // Refresh the list
     } catch (error) {
       console.error("Error deleting item", error);
+      alert("Failed to delete item.");
     }
   }
 
   async function saveItemEdits(itemId) {
     const token = Cookies.get("authToken");
     try {
-      const response = await putApiWithToken(
-        `https://backend-shopping-list-app-deployment.onrender.com/items/${itemId}`,
+      const response = await axios.put(
+        `http://localhost:3000/items/${itemId}`,
         editedItem,
-        token
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      if (response.ok) {
-        alert("Item updated successfully.");
-        setEditMode(null);
-        fetchItemsAndBudgets(); // Refresh the list
-      } else {
-        alert("Failed to update item. You are not authorized.");
-      }
+      alert("Item updated successfully.");
+      setEditMode(null);
+      fetchItemsAndBudgets(); // Refresh the list
     } catch (error) {
       console.error("Error updating item", error);
+      alert("Failed to update item.");
     }
   }
 
@@ -170,22 +153,14 @@ function Dashboard() {
         {!budget && (
           <>
             <h2>Create Budget</h2>
-            <BudgetForm
-              onSuccess={() => {
-                fetchItemsAndBudgets();
-              }}
-            />
+            <BudgetForm onSuccess={fetchItemsAndBudgets} />
           </>
         )}
 
-        {budgetList.length > 1 && ( // Render ItemDetailsForm if more than one budget exists
+        {budgetList.length > 1 && (
           <>
             <h2>Create Budget</h2>
-            <BudgetForm
-              onSuccess={() => {
-                fetchItemsAndBudgets();
-              }}
-            />
+            <BudgetForm onSuccess={fetchItemsAndBudgets} />
 
             <h2 style={{ marginTop: "1rem" }}>Create Item</h2>
             <ItemDetailsForm onSuccess={fetchItemsAndBudgets} />

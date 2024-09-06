@@ -1,4 +1,4 @@
-import { json, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import {
   formContainer,
@@ -7,7 +7,7 @@ import {
   sectionContainer,
 } from "../sharedStyles/form";
 import { useForm } from "react-hook-form";
-import { postApi } from "../utils/api";
+import axios from "axios"; // Import axios
 
 function Register() {
   const {
@@ -24,28 +24,36 @@ function Register() {
     console.log("Form Data:", data); // Log form data
 
     try {
-      const res = await postApi(
-        "https://backend-shopping-list-app-deployment.onrender.com/register",
-        data
-      );
+      // Use axios to send the POST request
+      const res = await axios.post("http://localhost:3000/register", data);
 
-      if (!res.ok) {
-        const serverError = await res.json();
-        console.error("Server Error:", serverError);
-        const errors = serverError.errors;
+      if (res.status >= 200 && res.status < 300) {
+        // Successful response
+        const resData = res.data;
+        console.log("Response Data:", resData);
+        alert("User registered successfully");
+        reset();
+      } else {
+        // Handle non-successful status codes
+        console.error("Server Error:", res);
+
+        const serverError = res.data || {};
+        const errors = serverError.errors || [];
         errors.forEach((error) => {
-          alert(error.message);
+          alert(error.message || "An error occurred");
         });
-        throw new Error(serverError);
+        throw new Error(serverError.message || "Unknown server error");
       }
-
-      const resData = await res.json();
-      console.log("Response Data:", resData);
-      alert("User registered successfully");
-      reset();
     } catch (error) {
       console.error("Error at registerApi:", error);
-      alert("Registration failed. Please try again.");
+
+      // Axios error handling, display error response if available
+      if (error.response) {
+        const serverError = error.response.data || {};
+        alert(serverError.message || "Registration failed. Please try again.");
+      } else {
+        alert("Registration failed. Please try again.");
+      }
     }
   }
 

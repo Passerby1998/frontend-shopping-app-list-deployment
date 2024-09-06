@@ -1,10 +1,10 @@
+import axios from "axios";
 import {
   formContainer,
   inputContainer,
   sectionBorder,
   sectionContainer,
 } from "../sharedStyles/form";
-import { postApi } from "../utils/api";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
@@ -16,35 +16,30 @@ function Login() {
 
   async function loginApi(data) {
     try {
-      const res = await postApi(
-        "https://backend-shopping-list-app-deployment.onrender.com/login",
-        data
-      );
+      const res = await axios.post("http://localhost:3000/login", data);
 
-      if (!res.ok) {
-        const serverError = await res.json();
-        const message = serverError.message;
+      if (res.status !== 200) {
+        const message = res.data.message;
         alert(message);
         throw new Error(message);
       }
-      const resData = await res.json();
-      const token = resData.token;
+      const token = res.data.token;
       console.log(token);
       alert("User logged in successfully");
-      navigate(
-        "https://backend-shopping-list-app-deployment.onrender.com/dashboard"
-      );
+      navigate("/dashboard");
 
       Cookies.set("authToken", token);
       reset();
     } catch (error) {
-      console.log("Error at loginApi");
+      console.error("Error at loginApi:", error);
+      alert("An error occurred while logging in.");
     }
   }
 
   function onSubmit(data) {
     loginApi(data);
   }
+
   return (
     <div>
       <Header />

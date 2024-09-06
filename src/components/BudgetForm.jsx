@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { postApiWithToken } from "../utils/api";
+import axios from "axios";
 import { useState } from "react";
 import Cookies from "js-cookie";
 
@@ -19,19 +19,21 @@ function BudgetForm({ onSuccess }) {
     try {
       setLoading(true);
       const token = Cookies.get("authToken");
-      const serverRes = await postApiWithToken(
-        "https://backend-shopping-list-app-deployment.onrender.com/grocerytrip",
+
+      // Make API request using Axios directly
+      const serverRes = await axios.post(
+        "http://localhost:3000/grocerytrip",
         data,
-        token
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
 
-      if (!serverRes.ok) {
-        const errorMessage = await serverRes.text();
-        alert(`Error: ${errorMessage}`);
-        return; // Exit the function if the response is not okay
-      }
-
-      const resData = await serverRes.json();
+      // Check for success response (Axios will throw error for non-200 status codes)
+      const resData = serverRes.data;
       console.log("Response Data:", resData); // Log the response to understand its structure
 
       // Access the budget from the 'groceryTrip' object
@@ -46,8 +48,16 @@ function BudgetForm({ onSuccess }) {
         );
       }
     } catch (error) {
-      console.error(error);
-      alert("Error creating new budget");
+      console.error("Error creating budget:", error);
+
+      // Handle Axios error if server response is available
+      if (error.response) {
+        const errorMessage =
+          error.response.data.message || "Error creating new budget";
+        alert(`Error: ${errorMessage}`);
+      } else {
+        alert("Error creating new budget");
+      }
     } finally {
       setLoading(false);
     }
