@@ -25,9 +25,12 @@ function Dashboard() {
       const token = Cookies.get("authToken");
 
       // Fetch budgets using Axios
-      const budgetRes = await axios.get("https://backend-shopping-list-app-deployment.onrender.com/grocerytrip", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const budgetRes = await axios.get(
+        "https://backend-shopping-list-app-deployment.onrender.com/grocerytrip",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const budgetData = budgetRes.data;
       console.log("Fetched budget data:", budgetData);
@@ -40,9 +43,12 @@ function Dashboard() {
       }
 
       // Fetch items using Axios
-      const itemsRes = await axios.get("https://backend-shopping-list-app-deployment.onrender.com/items", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const itemsRes = await axios.get(
+        "https://backend-shopping-list-app-deployment.onrender.com/items",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const itemsData = itemsRes.data;
       console.log("Fetched items data:", itemsData);
       setItems(itemsData.data || []);
@@ -97,20 +103,16 @@ function Dashboard() {
   async function saveItemEdits(itemId) {
     const token = Cookies.get("authToken");
     try {
-      const response = await axios.put(
+      await axios.put(
         `https://backend-shopping-list-app-deployment.onrender.com/items/${itemId}`,
         editedItem,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (response.ok) {
-        alert("Item updated successfully.");
-        setEditMode(null);
-        fetchItemsAndBudgets(); // Refresh the list
-      } else {
-        alert("Failed to update item. You are not authorized.");
-      }
+      alert("Item updated successfully.");
+      setEditMode(null);
+      fetchItemsAndBudgets(); // Refresh the list
     } catch (error) {
       console.error("Error updating item", error);
       alert("Failed to update item.");

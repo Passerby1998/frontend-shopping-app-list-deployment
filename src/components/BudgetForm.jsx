@@ -22,7 +22,7 @@ function BudgetForm({ onSuccess }) {
 
       // Make API request using Axios directly
       const serverRes = await axios.post(
-        "http://localhost:3000/grocerytrip",
+        "https://backend-shopping-list-app-deployment.onrender.com/grocerytrip",
         data,
         {
           headers: {
