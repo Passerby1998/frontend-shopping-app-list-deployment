@@ -68,7 +68,6 @@ function Login() {
               <button className="primary-black" type="submit">
                 Login
               </button>
-              console.log(button)
               <span>
                 {" "}
                 or{" "}
