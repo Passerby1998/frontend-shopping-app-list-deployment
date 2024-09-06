@@ -16,14 +16,19 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<PublicRoutes />}>
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
+
+        {/* Private routes */}
         <Route path="/dashboard" element={<PrivateRoutes />}>
           <Route index element={<Dashboard />} />
         </Route>
+
+        {/* Catch-all for 404 */}
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     </BrowserRouter>
