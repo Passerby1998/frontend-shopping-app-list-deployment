@@ -199,7 +199,10 @@ function Dashboard() {
               <table>
                 <thead>
                   <tr>
-                    <th onClick={() => handleSort("name")}>
+                    <th
+                      onClick={() => handleSort("name")}
+                      style={{ cursor: "pointer" }}
+                    >
                       Name{" "}
                       {sortConfig.key === "name"
                         ? sortConfig.direction === "ascending"
@@ -207,7 +210,10 @@ function Dashboard() {
                           : "↓"
                         : ""}
                     </th>
-                    <th onClick={() => handleSort("description")}>
+                    <th
+                      onClick={() => handleSort("description")}
+                      style={{ cursor: "pointer" }}
+                    >
                       Description{" "}
                       {sortConfig.key === "description"
                         ? sortConfig.direction === "ascending"
@@ -215,7 +221,10 @@ function Dashboard() {
                           : "↓"
                         : ""}
                     </th>
-                    <th onClick={() => handleSort("quantity")}>
+                    <th
+                      onClick={() => handleSort("quantity")}
+                      style={{ cursor: "pointer" }}
+                    >
                       Quantity{" "}
                       {sortConfig.key === "quantity"
                         ? sortConfig.direction === "ascending"
@@ -223,7 +232,10 @@ function Dashboard() {
                           : "↓"
                         : ""}
                     </th>
-                    <th onClick={() => handleSort("price_each")}>
+                    <th
+                      onClick={() => handleSort("price_each")}
+                      style={{ cursor: "pointer" }}
+                    >
                       Price Each (RM){" "}
                       {sortConfig.key === "price_each"
                         ? sortConfig.direction === "ascending"
