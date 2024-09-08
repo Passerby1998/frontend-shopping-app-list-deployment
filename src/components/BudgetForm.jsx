@@ -38,6 +38,7 @@ function BudgetForm({ onSuccess }) {
 
       // Access the budget from the 'groceryTrip' object
       if (resData && resData.groceryTrip && resData.groceryTrip.budget) {
+        //Error triggered when try to apply to dashboard
         const budget = resData.groceryTrip.budget;
         alert(`New budget created: RM ${budget}`);
         onSuccess();

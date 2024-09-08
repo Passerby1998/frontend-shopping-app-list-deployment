@@ -32,7 +32,7 @@ function Dashboard() {
         }
       );
 
-      const budgetData = budgetRes.data;
+      const budgetData = budgetRes.data; //Budget not fetchable
       console.log("Fetched budget data:", budgetData);
 
       if (Array.isArray(budgetData.data)) {
@@ -72,6 +72,7 @@ function Dashboard() {
       );
 
       if (totalPrice > (budget.amount || 500)) {
+        // Had to make budget fixed to 500 since budget not fetchable
         setAlertMessage("The total price of items exceeds the budget!");
       } else {
         setAlertMessage("");
